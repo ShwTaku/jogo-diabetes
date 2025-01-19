@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo Educativo - Diabetes Tipo 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Jogo Educativo - Diabetes Tipo 1</h1>
+    </header>
+
+    <section class="game">
+        <h2>1ª Pergunta: Acabaste de acordar e vais tomar o pequeno-almoço.</h2>
+        <p>Aqui tens 3 hipóteses de menu. Escolhe a opção que mais gostas.</p>
+
+        <div class="question" id="question-1">
+            <h3>1º Opção: Ovos Mexidos com Torrada Integral</h3>
+            <p>Ovos mexidos (2 ovos pequenos) + Pão integral (1/2 fatia)</p>
+            <button class="answer" data-option="1">Escolher esta opção</button>
+        </div>
+
+        <div class="question" id="question-2">
+            <h3>2º Opção: Panqueca de Aveia e Banana</h3>
+            <p>Flocos de aveia (2 colheres de sopa) + Banana (1/4 média) + Ovo pequeno (1 unidade)</p>
+            <button class="answer" data-option="2">Escolher esta opção</button>
+        </div>
+
+        <div class="question" id="question-3">
+            <h3>3º Opção: Pão com Manteiga de Amendoim</h3>
+            <p>Pão (1 fatia) + Manteiga de amendoim (1 colher de chá)</p>
+            <button class="answer" data-option="3">Escolher esta opção</button>
+        </div>
+
+        <div class="response" id="response-options" style="display: none;">
+            <h3>Agora, escolha a quantidade de hidratos de carbono:</h3>
+            <div id="responses"></div>
+            <button id="next-question" style="display: none;">Próxima Pergunta</button>
+        </div>
+
+        <div class="result" style="display: none;">
+            <p><strong>Pontuação Final:</strong> <span id="score">0</span></p>
+            <button id="finish-game">Finalizar Jogo</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Jogo Educativo - Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+/* Resetando padrões do navegador */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Corpo do documento */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f8ff; /* Azul claro */
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #1e90ff; /* Azul forte */
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+}
+
+h2, h3 {
+    color: #1e90ff;
+}
+
+.game {
+    padding: 20px;
+    text-align: center;
+}
+
+.question {
+    margin: 20px 0;
+}
+
+button {
+    background-color: #32cd32; /* Verde */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    margin: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #228b22; /* Verde mais escuro */
+}
+
+.response {
+    margin-top: 20px;
+}
+
+.result {
+    margin-top: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #1e90ff;
+    color: white;
+    margin-top: 30px;
+}
