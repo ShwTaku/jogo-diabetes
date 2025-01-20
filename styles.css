@@ -7,65 +7,168 @@
 
 /* Corpo do documento */
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f0f8ff; /* Azul claro */
+    font-family: 'Comic Sans MS', sans-serif;
+    background-color: #f0e68c;
     color: #333;
     line-height: 1.6;
-}
-
-header {
-    background-color: #1e90ff; /* Azul forte */
-    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
     text-align: center;
     padding: 20px;
+}
+
+/* Header */
+header {
+    background-color: #ff7f50;
+    color: white;
+    padding: 25px;
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
 }
 
 h1 {
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
+    font-size: 2.5rem;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-h2, h3 {
-    color: #1e90ff;
-}
-
-.game {
-    padding: 20px;
-    text-align: center;
-}
-
+/* Question */
 .question {
-    margin: 20px 0;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #555;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    margin-left: 10%;
+    border: 2px solid #ff6347;
 }
 
-button {
-    background-color: #32cd32; /* Verde */
+/* Game Container */
+.game-container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+}
+
+/* Botões */
+.answer-btn {
+    background-color: #32cd32;
     color: white;
     border: none;
-    padding: 12px 24px;
-    font-size: 16px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
     margin: 10px;
-    border-radius: 8px;
+    border-radius: 25px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 80%;
+    margin-left: 10%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
 }
 
-button:hover {
-    background-color: #228b22; /* Verde mais escuro */
+.answer-btn:hover {
+    background-color: #228b22;
+    transform: scale(1.05);
 }
 
-.response {
+.answer-btn:active {
+    transform: scale(0.95);
+}
+
+/* Resultados */
+#result {
+    display: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ff6347;
+}
+
+.score {
     margin-top: 20px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #4caf50;
 }
 
-.result {
-    margin-top: 20px;
-}
-
+/* Footer */
 footer {
     text-align: center;
     padding: 15px;
-    background-color: #1e90ff;
+    background-color: #ff7f50;
     color: white;
+    width: 100%;
     margin-top: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Grupo de Botões */
+.btn-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Transições de botões */
+.answer-btn {
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+}
+
+/* Animação de fade */
+.question {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Estilo para ícones pequenos */
+.icon {
+    font-size: 1.5rem;
+    margin-right: 8px;
+    color: #ff6347;
+}
+
+/* Ajuste para telas pequenas */
+@media screen and (max-width: 600px) {
+    .game-container {
+        padding: 20px;
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .question {
+        padding: 15px;
+    }
+
+    .answer-btn {
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
 }

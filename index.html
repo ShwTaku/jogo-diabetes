@@ -3,53 +3,443 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo Educativo - Diabetes Tipo 1</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <title>Jogo de Missão Glicose</title>
+    <style>
+        /* Todo o estilo fornecido */
+        /* Resetando padrões do navegador */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Corpo do documento */
+        body {
+            font-family: 'Comic Sans MS', sans-serif; /* Fonte infantil e divertida */
+            background-color: #f0e68c; /* Amarelo suave */
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: #ff7f50; /* Laranja alegre */
+            color: white;
+            padding: 25px;
+            width: 35%;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Question */
+        .question {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #555;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin-left: 10%;
+            border: 2px solid #ff6347; /* Borda colorida */
+        }
+
+        /* Game Container */
+        .game-container {
+            background-color: #ffffff; /* Fundo branco */
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        /* Botões */
+        .answer-btn {
+            background-color: #32cd32; /* Verde suave */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            margin: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 80%;
+            margin-left: 10%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+        }
+
+        .answer-btn:hover {
+            background-color: #228b22; /* Verde mais escuro */
+            transform: scale(1.05);
+        }
+
+        .answer-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Resultados */
+        #result {
+            display: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff6347; /* Laranja */
+        }
+
+        .score {
+            margin-top: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #4caf50; /* Verde */
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #ff7f50;
+            color: white;
+            width: 100%;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Grupo de Botões */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Transições de botões */
+        .answer-btn {
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        /* Animação de fade */
+        .question {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Estilo para ícones pequenos */
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 8px;
+            color: #ff6347;
+        }
+
+        /* Ajuste para telas pequenas */
+        @media screen and (max-width: 600px) {
+            .game-container {
+                padding: 20px;
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .question {
+                padding: 15px;
+            }
+
+            .answer-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
+
     <header>
-        <h1>Jogo Educativo - Diabetes Tipo 1</h1>
+        <h1>Jogo de Hidratos de Carbono</h1>
     </header>
 
-    <section class="game">
-        <h2>1ª Pergunta: Acabaste de acordar e vais tomar o pequeno-almoço.</h2>
-        <p>Aqui tens 3 hipóteses de menu. Escolhe a opção que mais gostas.</p>
-
-        <div class="question" id="question-1">
-            <h3>1º Opção: Ovos Mexidos com Torrada Integral</h3>
-            <p>Ovos mexidos (2 ovos pequenos) + Pão integral (1/2 fatia)</p>
-            <button class="answer" data-option="1">Escolher esta opção</button>
+    <div class="game-container">
+        <div id="question-container">
+            <h2 id="question">1. Acabaste de acordar e vais tomar o pequeno-almoço, aqui tens 3 hipoteses de Menu.</h2>
+            <div id="answers">
+                <!-- As opções de Menu são mostradas primeiro -->
+                <button class="answer-btn" onclick="selectMenu(0)">Ovos Mexidos com Torrada Integral</button>
+                <button class="answer-btn" onclick="selectMenu(1)">Panqueca de Aveia e Banana (com porção controlada)</button>
+                <button class="answer-btn" onclick="selectMenu(2)">Pão com Manteiga de Amendoim</button>
+            </div>
         </div>
 
-        <div class="question" id="question-2">
-            <h3>2º Opção: Panqueca de Aveia e Banana</h3>
-            <p>Flocos de aveia (2 colheres de sopa) + Banana (1/4 média) + Ovo pequeno (1 unidade)</p>
-            <button class="answer" data-option="2">Escolher esta opção</button>
+        <div id="result" style="display:none;">
+            <h2>Resultado Final</h2>
+            <p id="score">Pontuação: 0</p>
+            <button onclick="restartGame()">Jogar novamente</button>
         </div>
+    </div>
 
-        <div class="question" id="question-3">
-            <h3>3º Opção: Pão com Manteiga de Amendoim</h3>
-            <p>Pão (1 fatia) + Manteiga de amendoim (1 colher de chá)</p>
-            <button class="answer" data-option="3">Escolher esta opção</button>
-        </div>
+    <script>
+        let totalScore = 0;
+        let currentQuestion = 0;
+        let selectedMenu = null;
 
-        <div class="response" id="response-options" style="display: none;">
-            <h3>Agora, escolha a quantidade de hidratos de carbono:</h3>
-            <div id="responses"></div>
-            <button id="next-question" style="display: none;">Próxima Pergunta</button>
-        </div>
+        // Perguntas e opções
+        const questions = [
+    {
+        question: "1. Acabaste de acordar e vais tomar o pequeno-almoço, aqui tens 3 hipoteses de Menu.",
+        options: [
+            {
+                text: "Ovos Mexidos com Torrada Integral",
+                hidratos: [
+                    {text: "8g hidratos de carbono", correctAnswer: true, points: 12.5},
+                    {text: "16g hidratos de carbono", correctAnswer: false, points: 4},
+                    {text: "32g hidratos de carbono", correctAnswer: false, points: 0}
+                ]
+            },
+            {
+                text: "Panqueca de Aveia e Banana (com porção controlada)",
+                hidratos: [
+                    {text: "10g hidratos de carbono", correctAnswer: false, points: 0},
+                    {text: "20g hidratos de carbono", correctAnswer: true, points: 12.5},
+                    {text: "30g hidratos de carbono", correctAnswer: false, points: 4}
+                ]
+            },
+            {
+                text: "Pão com Manteiga de Amendoim",
+                hidratos: [
+                    {text: "10g hidratos de carbono", correctAnswer: false, points: 0},
+                    {text: "15g hidratos de carbono", correctAnswer: false, points: 4},
+                    {text: "20g hidratos de carbono", correctAnswer: true, points: 12.5}
+                ]
+            }
+        ]
+    },
+    {
+        question: "2. A tua barriga está a fazer barulho... Vamos fazer um lanchinho! Qual é o menu que achas que tem menos hidratos de carbono?",
+        options: [
+            {text: "Barra de chocolate de Leite", correctAnswer: false, points: 0},
+            {text: "Pão integral pequeno, queijo magro e maçã pequena", correctAnswer: true, points: 12.5}
+        ]
+    },
+    {
+        question: "3. Já é hora de almoço! Escolhe uma das 3 hipoteses de Menu.",
+        options: [
+            {
+                text: "Peito de Frango Grelhado com Arroz Integral",
+                hidratos: [
+                    {text: "22g hidratos de carbono", correctAnswer: true, points: 12.5},
+                    {text: "35g hidratos de carbono", correctAnswer: false, points: 4},
+                    {text: "43g hidratos de carbono", correctAnswer: false, points: 0}
+                ]
+            },
+            {
+                text: "Salmão Assado com Batata Doce e Salada",
+                hidratos: [
+                    {text: "20g hidratos de carbono", correctAnswer: false, points: 0},
+                    {text: "25g hidratos de carbono", correctAnswer: true, points: 12.5},
+                    {text: "32g hidratos de carbono", correctAnswer: false, points: 4}
+                ]
+            },
+            {
+                text: "Bife de Peru com Puré de Batata",
+                hidratos: [
+                    {text: "20g hidratos de carbono", correctAnswer: false, points: 0},
+                    {text: "25g hidratos de carbono", correctAnswer: true, points: 12.5},
+                    {text: "32g hidratos de carbono", correctAnswer: false, points: 4}
+                ]
+            }
+        ]
+    },
+    {
+        question: "4. A tua glicemia está a 100, como vais fazer atividade física, o que deves fazer?",
+        options: [
+            {text: "Comer e ajustar valores", correctAnswer: true, points: 12.5},
+            {text: "Nada", correctAnswer: false, points: 0}
+        ]
+    },
+    {
+        question: "5. Estás na tua atividade extracurricular e sentes muita sede. O que deves fazer?",
+        options: [
+            {text: "Ignorar e continuar a brincar", correctAnswer: false, points: 0},
+            {text: "Parar, medir a glicemia e beber água", correctAnswer: true, points: 12.5},
+            {text: "Comer chocolates para aliviar a sede", correctAnswer: false, points: 0}
+        ]
+    },
+	{
+    question: "6. A tua barriga está a dar horas, é hora do jantar! Escolhe uma das 3 hipoteses de Menu.",
+    options: [
+        {
+            text: "Frango grelhado com legumes cozidos, Arroz integral (1/2 chávena), Iogurte natural sem açúcar (1 pote de 125g) com morangos frescos (1/4 chávena)",
+            hidratos: [
+                {text: "20g hidratos de carbono", correctAnswer: false, points: 0},
+                {text: "30g hidratos de carbono", correctAnswer: true, points: 12.5},
+                {text: "40g hidratos de carbono", correctAnswer: false, points: 4}
+            ]
+        },
+        {
+            text: "Peixe assado (como salmão ou bacalhau), Batata-doce assada (1/2 batata média), Maçã fatiada (1 maçã média) com 1 colher de sopa de aveia",
+            hidratos: [
+                {text: "35g hidratos de carbono", correctAnswer: false, points: 4},
+                {text: "45g hidratos de carbono", correctAnswer: true, points: 12.5},
+                {text: "55g hidratos de carbono", correctAnswer: false, points: 0}
+            ]
+        },
+        {
+            text: "Omelete de claras com espinafres e cogumelos, 2 fatias de pão integral (30g) com abacate (1/4 de abacate), Pudim de chia com leite de amêndoas (1 colher de sopa de chia, 1/2 chávena de leite de amêndoas)",
+            hidratos: [
+                {text: "25g hidratos de carbono", correctAnswer: false, points: 0},
+                {text: "35g hidratos de carbono", correctAnswer: true, points: 12.5},
+                {text: "45g hidratos de carbono", correctAnswer: false, points: 4}
+            ]
+        }
+    ]
+},
+{
+        question: "7. Estás quase a acabar! Mas antes, falta fazeres uma ceia!",
+        options: [
+            {
+                text: "Bolachas integrais (3 unidades) Queijo fresco (50g) Leite magro (1 chávena)",
+                hidratos: [
+                    {text: "20g hidratos de carbono", correctAnswer: true, points: 12.5},
+                    {text: "30g hidratos de carbono", correctAnswer: false, points: 4},
+                    {text: "40g hidratos de carbono", correctAnswer: false, points: 0}
+                ]
+            },
+            {
+                text: "Iogurte natural sem açúcar (1 pote de 125g) Tostas de arroz integral (2 unidades) Morangos frescos (1/2 chávena)",
+                hidratos: [
+                    {text: "25g hidratos de carbono", correctAnswer: false, points: 12.5},
+                    {text: "35g hidratos de carbono", correctAnswer: true, points: 4},
+                    {text: "45g hidratos de carbono", correctAnswer: false, points: 0}
+                ]
+            },
+            {
+                text: "Pão integral (1 fatia) Manteiga de amendoim (1 colher de sopa) Maçã pequena (1 unidade)",
+                hidratos: [
+                    {text: "20g hidratos de carbono", correctAnswer: false, points: 0},
+                    {text: "30g hidratos de carbono", correctAnswer: true, points: 12.5},
+                    {text: "40g hidratos de carbono", correctAnswer: false, points: 4}
+                ]
+            }
+        ]
+    },
+];
 
-        <div class="result" style="display: none;">
-            <p><strong>Pontuação Final:</strong> <span id="score">0</span></p>
-            <button id="finish-game">Finalizar Jogo</button>
-        </div>
-    </section>
 
-    <footer>
-        <p>© 2025 Jogo Educativo - Todos os direitos reservados.</p>
-    </footer>
 
-    <script src="script.js"></script>
+        // Função para selecionar um menu
+        function selectMenu(menuIndex) {
+            const currentQ = questions[currentQuestion];
+            selectedMenu = menuIndex;
+
+            if (currentQ.options[menuIndex].hidratos) {
+                // Exibe a pergunta sobre os hidratos de carbono para o menu escolhido
+                const questionText = `Menu escolhido: ${currentQ.options[menuIndex].text}. Agora, escolha a quantidade de hidratos de carbono (g) para a sua porção:`;
+                document.getElementById('question').textContent = questionText;
+
+                // Remove as respostas iniciais e exibe as opções de hidratos de carbono
+                const answersContainer = document.getElementById('answers');
+                answersContainer.innerHTML = ''; // Limpa as respostas anteriores
+
+                // Adiciona as respostas com as opções de hidratos
+                currentQ.options[menuIndex].hidratos.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.classList.add('answer-btn');
+                    button.textContent = option.text;
+                    button.onclick = () => checkAnswer(option.correctAnswer, option.points);
+                    answersContainer.appendChild(button);
+                });
+            } else {
+                // Se a pergunta não tiver hidratos, apenas verifica a resposta diretamente
+                checkAnswer(currentQ.options[menuIndex].correctAnswer, currentQ.options[menuIndex].points);
+            }
+        }
+
+        // Função para verificar a resposta e calcular a pontuação
+        function checkAnswer(correctAnswer, points) {
+            if (correctAnswer) {
+                totalScore += points;
+            }
+
+            currentQuestion++;
+
+            // Atualiza a pontuação na tela
+            document.getElementById('score').textContent = `Pontuação Atual: ${totalScore}`;
+
+            // Se houver mais perguntas, passa para a próxima, caso contrário, mostra o resultado
+            if (currentQuestion < questions.length) {
+                displayNextQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        // Função para exibir a próxima pergunta
+        function displayNextQuestion() {
+            const nextQuestion = questions[currentQuestion];
+            document.getElementById('question').textContent = nextQuestion.question;
+
+            const answersContainer = document.getElementById('answers');
+            answersContainer.innerHTML = '';
+
+            nextQuestion.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.classList.add('answer-btn');
+                button.textContent = option.text;
+                button.onclick = () => selectMenu(index);
+                answersContainer.appendChild(button);
+            });
+        }
+
+        // Função para exibir o resultado final
+        function showResult() {
+            document.getElementById('question-container').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('score').textContent = `Pontuação Final: ${totalScore}`;
+        }
+
+        // Função para reiniciar o jogo
+        function restartGame() {
+            totalScore = 0;
+            currentQuestion = 0;
+            document.getElementById('question-container').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+            displayNextQuestion();
+        }
+
+        // Inicia o jogo
+        window.onload = function() {
+            displayNextQuestion();
+        };
+    </script>
+
 </body>
 </html>
