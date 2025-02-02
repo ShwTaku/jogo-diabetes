@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo Missão Glicose</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', sans-serif;
+      background-color: #6495ED;
+      color: #333;
+      line-height: 1.6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+      text-align: center;
+      padding: 0px;
+    }
+
+    header {
+      background-color: #fff;
+      color: white;
+      padding: 50px;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 15px;
+      margin: 0 auto;
+    }
+	 
+    /* Animação aplicada apenas no título */
+    h1 {
+      color: #8FBC8F;
+      font-family: 'Comic Sans MS', sans-serif;
+      animation: growShrink 5s ease-in-out infinite;
+    }
+
+    /* Animação para aumentar e diminuir o título */
+    @keyframes growShrink {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+	  
+	  h2 {
+		  color: #8FBC8F;
+      font-family: 'Comic Sans MS', sans-serif;
+	  }
+    .question {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #555;
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 90%;
+	 max-width: 600px; /* Definir limite máximo */
+      margin-left: 10%;
+      border: 2px solid #FFB6C1;
+    }
+
+    .game-container {
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+	max-width: 600px; /* Limita a largura máxima */
+      border: 5px solid #FFCBDB; /* Borda do retângulo */
+    }
+
+    button {
+      background-color: #FFB84D;
+      color: #2c6e8f;
+      border: none;
+      padding: 20px 50px;
+      margin: 15px;
+      font-size: 20px;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ff6f61;
+    }
+
+    button:active {
+      background-color: #ff3d2e;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+	  /* Estilo para a janela pop-up */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+        button {
+            margin: 10px;
+        }
+
+        /* Posiciona o botão "Regras" mais acima */
+        .regras-btn {
+            position: absolute;
+            top: 20px; /* Ajuste a distância do topo conforme necessário */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+	  
+	  /* Responsividade para telas menores */
+    @media screen and (max-width: 600px) {
+      .question {
+        width: 90%;
+      }
+
+      .game-container {
+        padding: 20px;
+      }
+
+      button {
+        font-size: 16px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="menu" class="game-container">
+    <h1>Bem-vindo a Missão Glicose!</h1>
+    <button id="startButton">Começar o Jogo</button>
+  </div>
+
+
+  <button onclick="showPopup()">Regras</button>
+
+    <div id="popup">
+        <div class="popup-content">
+            <button onclick="closePopup()">Fechar</button>
+            <button onclick="showContent('casas')">Casas de Atividades</button>
+            <button onclick="showContent('comoJogar')">Como Jogar</button>
+			<button onclick="showContent('hidratos')">Tabela de Hidratos de Carbono</button>
+            <div id="content">
+                <!-- O conteúdo será exibido aqui -->
+            </div>
+        </div>
+    </div>
+
+
+  <div id="game" class="game-container hidden">
+    <h2 id="questionTitle"></h2>
+	<div id="selectedMenu" style="font-weight: bold; color: #006400; margin-bottom: 15px;"></div>
+    <div id="options"></div>
+  </div>
+
+  <div id="score" class="game-container hidden">
+    <h2>Sua pontuação final: <span id="finalScore">0</span></h2>
+    <button onclick="restartGame()">Recomeçar</button>
+  </div>
+
+  <script>
+    let currentScore = 0;
+    let questionIndex = 0;
+
+    const questions = [
+      {
+        question: "1º Pergunta: Acabaste de acordar e vais tomar o pequeno-almoço, aqui tens 3 hipoteses de Menu",
+        options: [
+          { text: "Ovos Mexidos com Torrada Integral", menu: [
+              { option: "8g hidratos de carbono", correct: true, points: 12.5 },
+              { option: "16g hidratos de carbono", correct: false, points: 4 },
+              { option: "32g hidratos de carbono", correct: false, points: 0 }
+            ] 
+          },
+          { text: "Panqueca de Aveia e Banana", menu: [
+              { option: "10g hidratos de carbono", correct: false, points: 0 },
+              { option: "20g hidratos de carbono", correct: true, points: 12.5 },
+              { option: "30g hidratos de carbono", correct: false, points: 4 }
+            ]
+          },
+          { text: "Pão com Manteiga de Amendoim", menu: [
+              { option: "10g hidratos de carbono", correct: false, points: 0 },
+              { option: "15g hidratos de carbono", correct: false, points: 4 },
+              { option: "20g hidratos de carbono", correct: true, points: 12.5 }
+            ]
+          }
+        ]
+      },
+      {
+        question: "2º Pergunta: A tua barriga está a fazer barulho... Vamos fazer um lanchinho! Qual é o menu que achas que tem menos hidratos de carbono?",
+        options: [
+          { text: "Pão integral pequeno, queijo magro e maçã pequena ", correct: true, points: 12.5 },
+          { text: "1 Barra de chocolate de leite (100g)", correct: false, points: 0 }
+        ]
+      },
+      {
+        question: "3º Pergunta: Já é hora de almoço! Escolhe uma das 3 hipoteses de Menu.",
+        options: [
+          { text: "Peito de Frango Grelhado com Arroz Integral", menu: [
+              { option: "22g hidratos de carbono", correct: true, points: 12.5 },
+              { option: "35g hidratos de carbono", correct: false, points: 4 },
+              { option: "43g hidratos de carbono", correct: false, points: 0 }
+            ]
+          },
+          { text: "Salmão Assado com Batata Doce e Salada", menu: [
+              { option: "20g hidratos de carbono", correct: false, points: 0 },
+              { option: "25g hidratos de carbono", correct: true, points: 12.5 },
+              { option: "32g hidratos de carbono", correct: false, points: 4 }
+            ]
+          },
+          { text: "Bife de Peru com Puré de Batata", menu: [
+              { option: "20g hidratos de carbono", correct: false, points: 0 },
+              { option: "25g hidratos de carbono", correct: true, points: 12.5 },
+              { option: "32g hidratos de carbono", correct: false, points: 4 }
+            ]
+          }
+        ]
+      },
+      {
+        question: "4º Pergunta: A tua glicemia está a 100, como vais fazer atividade física, o que deves fazer?",
+        options: [
+          { text: "Comer e ajustar valores", correct: true, points: 12.5 },
+          { text: "Nada", correct: false, points: 0 }
+        ]
+      },
+      {
+        question: "5º Pergunta: Estás na tua atividade extracurricular e sentes muita sede. O que deves fazer?",
+        options: [
+          { text: "Ignorar e continuar a brincar", correct: false, points: 0 },
+          { text: "Parar, medir a glicemia e beber água", correct: true, points: 12.5 },
+          { text: "Comer chocolates para aliviar a sede", correct: false, points: 0 }
+        ]
+      },
+      {
+        question: "6º Pergunta: A tua barriga está a dar horas, é hora do jantar! Escolhe um menu.",
+        options: [
+          { text: "Menu 1: Frango grelhado com legumes cozidos, arroz integral (1/2 chávena), iogurte natural sem açúcar com morangos frescos", menu: [
+              { option: "20g", correct: false, points: 0 },
+              { option: "30g", correct: true, points: 12.5 },
+              { option: "40g", correct: false, points: 0 }
+            ]
+          },
+          { text: "Menu 2: Peixe assado, batata-doce assada (1/2 batata média), maçã fatiada com 1 colher de sopa de aveia", menu: [
+              { option: "35g", correct: false, points: 0 },
+              { option: "45g", correct: true, points: 12.5 },
+              { option: "55g", correct: false, points: 0 }
+            ]
+          },
+          { text: "Menu 3: Omelete de claras com espinafres e cogumelos, 2 fatias de pão integral com abacate, pudim de chia com leite de amêndoas", menu: [
+              { option: "25g", correct: false, points: 0 },
+              { option: "35g", correct: true, points: 12.5 },
+              { option: "45g", correct: false, points: 0 }
+            ]
+          }
+        ]
+      },
+      {
+        question: "7º Pergunta: Estás quase a acabar! Mas antes, falta fazeres uma ceia! Escolhe um menu.",
+        options: [
+          { text: "Menu 1: Bolachas integrais (3 unidades), queijo fresco (50g), leite magro (1 chávena)", menu: [
+              { option: "20g", correct: false, points: 0 },
+              { option: "30g", correct: true, points: 12.5 },
+              { option: "40g", correct: false, points: 0 }
+            ]
+          },
+          { text: "Menu 2: Iogurte natural sem açúcar (1 pote de 125g), tostas de arroz integral (2 unidades), morangos frescos (1/2 chávena)", menu: [
+              { option: "25g", correct: true, points: 12.5 },
+              { option: "35g", correct: false, points: 0 },
+              { option: "45g", correct: false, points: 0 }
+            ]
+          },
+          { text: "Menu 3: Pão integral (1 fatia), manteiga de amendoim (1 colher de sopa), maçã pequena (1 unidade)", menu: [
+              { option: "20g", correct: false, points: 0 },
+              { option: "30g", correct: true, points: 12.5 },
+              { option: "40g", correct: false, points: 0 }
+            ]
+          }
+        ]
+      },
+      {
+        question: "RESPOSTA FINAL: Por que é importante contar os hidratos de carbono nas refeições para uma pessoa com diabetes?",
+        options: [
+          { text: "Para escolher as refeições mais saborosas", correct: false, points: 0 },
+          { text: "Para aumentar a quantidade de comida durante o dia", correct: false, points: 0 },
+          { text: "Para garantir que a glicemia esteja equilibrada e evitar picos de açúcar no sangue", correct: true, points: 12.5 }
+        ]
+      }
+    ];
+    function startGame() {
+      document.getElementById("menu").classList.add("hidden");
+      document.getElementById("game").classList.remove("hidden");
+      showQuestion();
+    }
+
+    function showQuestion() {
+    const question = questions[questionIndex];
+    document.getElementById("questionTitle").innerText = question.question;
+    
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = ""; // Limpa as opções anteriores
+
+    // Reseta a exibição do menu selecionado ao carregar uma nova pergunta
+    document.getElementById("selectedMenu").innerText = "";
+
+    question.options.forEach(option => {
+        const button = document.createElement("button");
+        button.innerText = option.text;
+        button.onclick = () => {
+            if (option.menu) {
+                showMenuOptions(option.menu, option.text); // Passando o nome do menu selecionado
+            } else {
+                checkAnswer(option);
+            }
+        };
+        optionsDiv.appendChild(button);
+    });
+}
+
+    function showMenuOptions(menu, menuText) {
+    // Exibe o menu escolhido pelo jogador
+    document.getElementById("selectedMenu").innerText = "Menu selecionado: " + menuText;
+    
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = ""; // Limpa as opções anteriores
+
+    menu.forEach(menuOption => {
+        const button = document.createElement("button");
+        button.innerText = menuOption.option;
+        button.onclick = () => checkAnswer(menuOption);
+        optionsDiv.appendChild(button);
+    });
+}
+
+    function checkAnswer(option) {
+      if (option.correct) {
+        currentScore += option.points;
+      }
+      questionIndex++;
+
+      if (questionIndex < questions.length) {
+        showQuestion();
+      } else {
+        showScore();
+      }
+    }
+
+    function showScore() {
+      document.getElementById("game").classList.add("hidden");
+      document.getElementById("score").classList.remove("hidden");
+      document.getElementById("finalScore").innerText = currentScore;
+    }
+
+    function restartGame() {
+      questionIndex = 0;
+      currentScore = 0;
+      document.getElementById("score").classList.add("hidden");
+      document.getElementById("menu").classList.remove("hidden");
+    }
+
+    function showInstructions() {
+      document.getElementById("menu").classList.add("hidden");
+      document.getElementById("instructions").classList.remove("hidden");
+    }
+
+    function goBackToMenu() {
+      document.getElementById("instructions").classList.add("hidden");
+      document.getElementById("menu").classList.remove("hidden");
+    }
+
+	  function showPopup() {
+            document.getElementById('popup').style.display = 'flex';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function showContent(section) {
+    const content = document.getElementById('content');
+    if (section === 'casas') {
+        content.innerHTML = `
+            <h3>Casas de Atividades</h3>
+            <p><strong>Casa Amarela:</strong> Pequeno almoço. O jogador tem que responder à pergunta sobre a refeição.</p>
+            <p><strong>Casa Azul Claro:</strong> Lanche da manhã. O jogador tem que responder à pergunta sobre o lanche.</p>
+            <p><strong>Casa Verde:</strong> Almoço. O jogador tem que responder à pergunta sobre a refeição principal.</p>
+            <p><strong>Casa Laranja:</strong> Educação física. O jogador tem que responder à pergunta sobre a atividade física.</p>
+            <p><strong>Casa Azul Escuro:</strong> Atividade extra curricular. O jogador tem que responder à pergunta sobre as atividades extracurriculares.</p>
+            <p><strong>Casa Roxa:</strong> Jantar. O jogador tem que responder à pergunta sobre o jantar.</p>
+            <p><strong>Casa Castanho:</strong> Ceia. O jogador tem que responder à pergunta sobre a ceia antes de dormir.</p>
+        `;
+    } else if (section === 'comoJogar') {
+        content.innerHTML = `
+            <h3>Como Jogar</h3>
+            <p>O objetivo do jogo é ensinar aos jogadores sobre a vida de uma pessoa com diabetes e como ela deve controlar a glicemia ao longo do dia.</p>
+            <p>O jogador vai avançar pelas casas, respondendo perguntas sobre refeições e atividades físicas. Cada resposta correta vai ajudar a pontuar mais no final do jogo.</p>
+            <p>Cada cor de casa representa um tipo de atividade, e a escolha das respostas vai influenciar no progresso e pontuação.</p>
+        `;
+    } else if (section === 'hidratos') {
+        content.innerHTML = `
+            <h3>Tabela de Hidratos de Carbono</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Alimento</th>
+                        <th>Quantidade</th>
+                        <th>Hidratos de Carbono (g)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Pão integral</td>
+                        <td>1 fatia</td>
+                        <td>15g</td>
+                    </tr>
+                    <tr>
+                        <td>Arroz branco cozido</td>
+                        <td>1/2 chávena</td>
+                        <td>22g</td>
+                    </tr>
+                    <tr>
+                        <td>Banana</td>
+                        <td>1 unidade média</td>
+                        <td>27g</td>
+                    </tr>
+                    <tr>
+                        <td>Maçã</td>
+                        <td>1 unidade média</td>
+                        <td>25g</td>
+                    </tr>
+                    <tr>
+                        <td>Batata cozida</td>
+                        <td>1 batata média</td>
+                        <td>37g</td>
+                    </tr>
+                    <tr>
+                        <td>Leite</td>
+                        <td>1 copo</td>
+                        <td>12g</td>
+                    </tr>
+                </tbody>
+            </table>
+        `;
+    }
+}
+	    
+    document.getElementById("startButton").onclick = startGame;
+  </script>
+
+</body>
+</html>
